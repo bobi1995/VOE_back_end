@@ -5,6 +5,8 @@ import { userType } from "./typeDefs/userType";
 import { authType } from "./typeDefs/authType";
 import { categoryType } from "./typeDefs/categoryType";
 import { caseType } from "./typeDefs/caseType";
+import { answerType } from "./typeDefs/answerType";
+import { commentType } from "./typeDefs/commentType";
 
 export default [
   otherType,
@@ -14,4 +16,6 @@ export default [
   authType,
   categoryType,
   caseType,
+  answerType,
+  commentType,
 ];

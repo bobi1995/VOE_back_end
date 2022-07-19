@@ -34,6 +34,20 @@ const caseSchema = new Schema({
     ref: "User",
     require: true,
   },
+  answerId: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Answer",
+      require: true,
+    },
+  ],
+  commentId: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Comment",
+      require: true,
+    },
+  ],
 });
 
 module.exports = model("Case", caseSchema);

@@ -23,8 +23,10 @@ export const caseType = gql`
     attachments: [String]
     priority: Int
     status: Int
-    categoryId: [Category!]!
+    categoryId: [Category!]! #All categories case belongs to
     senderId: User!
+    answerId: [Answer] #All answers given to case
+    commentId: [Comment] #All comments given to case
   }
 
   #Inputs
@@ -43,11 +45,13 @@ export const caseType = gql`
 export const caseResolvers = {
   Query: {
     getAllCases: async () => {
-      return await CaseModel.find().populate("categoryId senderId");
+      return await CaseModel.find().populate(
+        "categoryId senderId answerId commentId"
+      );
     },
     getSingleCase: async (parentValue: any, args: { caseId: String }) => {
       return await CaseModel.findById(args.caseId).populate(
-        "categoryId senderId"
+        "categoryId senderId answerId commentId"
       );
     },
   },
@@ -76,6 +80,8 @@ export const caseResolvers = {
         signature: input.signature,
         attachments: input.attachments,
         senderId: input.senderId,
+        answerId: [],
+        commentId: [],
       });
 
       return newCase

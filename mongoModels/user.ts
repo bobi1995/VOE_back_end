@@ -38,6 +38,20 @@ const userSchema = new Schema({
       ref: "Category",
     },
   ],
+
+  commentId: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Comment",
+    },
+  ],
+
+  answerId: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Answer",
+    },
+  ],
 });
 
 module.exports = model("User", userSchema);

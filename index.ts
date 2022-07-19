@@ -10,6 +10,7 @@ import { userResolvers } from "./schema/typeDefs/userType";
 import { authResolvers } from "./schema/typeDefs/authType";
 import { categoryResolvers } from "./schema/typeDefs/categoryType";
 import { caseResolvers } from "./schema/typeDefs/caseType";
+import { answerResolvers } from "./schema/typeDefs/answerType";
 
 //typeDefsimport
 import TypeDefs from "./schema/TypeDefs";
@@ -49,5 +50,11 @@ async function startApolloServer(typeDefs: any, resolvers: any) {
 
 startApolloServer(
   TypeDefs,
-  merge(userResolvers, authResolvers, categoryResolvers, caseResolvers)
+  merge(
+    userResolvers,
+    authResolvers,
+    categoryResolvers,
+    caseResolvers,
+    answerResolvers
+  )
 );

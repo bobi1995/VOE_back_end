@@ -27,7 +27,9 @@ export const userType = gql`
     admin: Boolean!
     avatar: String
     regCaseIds: [Case] #Registrated Cases
-    categoryId: [Category]
+    categoryId: [Category] #Expert in particular category
+    answerId: [Answer] #All written answers
+    commentId: [Comment] #All written comments
   }
   #Inputs
   input CreateUser {
@@ -50,10 +52,14 @@ export const userType = gql`
 export const userResolvers = {
   Query: {
     getAllUsers: async () => {
-      return await UserModel.find().populate("categoryId regCaseIds");
+      return await UserModel.find().populate(
+        "categoryId regCaseIds answerId commentId"
+      );
     },
     getSingleUser: async (parentValue: any, args: { id: String }) => {
-      return await UserModel.findById(args.id);
+      return await UserModel.findById(args.id).populate(
+        "categoryId regCaseIds answerId commentId"
+      );
     },
   },
   Mutation: {
@@ -76,6 +82,8 @@ export const userResolvers = {
           admin: input.admin,
           regCaseIds: [],
           categoryId: [],
+          answerId: [],
+          commentId: [],
         });
         return user
           .save()
