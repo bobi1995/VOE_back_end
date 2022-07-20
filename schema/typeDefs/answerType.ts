@@ -4,6 +4,7 @@ const AnswerModel = require("../../mongoModels/answer");
 const CaseModel = require("../../mongoModels/case");
 
 export const answerType = gql`
+
   extend type Mutation {
     createAnswer(
       caseId: String!
@@ -11,20 +12,23 @@ export const answerType = gql`
       description: String
       attachments: [String]
     ): Answer
+
     editAnswer(
       answerId: String!
       description: String
       attachments: [String]
     ): Answer
   }
+
+
   type Answer {
     _id: String
     date: String
     description: String
     attachments: [String]
-    caseId: String!
-    senderId: String!
-    commentId: [String]
+    caseId: Case!
+    userId: User!
+    commentId: [Comment]
   }
 `;
 
@@ -53,6 +57,8 @@ export const answerResolvers = {
         description: args.description,
         date: new Date().toDateString(),
         attachments: args.attachments,
+        caseId:args.caseId,
+        userId:args.userId
       });
 
       return newAnswer

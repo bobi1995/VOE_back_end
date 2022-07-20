@@ -29,7 +29,7 @@ const caseSchema = new Schema({
       require: true,
     },
   ],
-  senderId: {
+  userId: {
     type: Schema.Types.ObjectId,
     ref: "User",
     require: true,

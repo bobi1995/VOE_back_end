@@ -17,7 +17,7 @@ const answerSchema = new Schema({
     ref: "Case",
     require: true,
   },
-  senderId: {
+  userId: {
     type: Schema.Types.ObjectId,
     ref: "User",
     require: true,

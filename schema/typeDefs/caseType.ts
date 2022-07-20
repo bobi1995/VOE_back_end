@@ -24,7 +24,7 @@ export const caseType = gql`
     priority: Int
     status: Int
     categoryId: [Category!]! #All categories case belongs to
-    senderId: User!
+    userId: User!
     answerId: [Answer] #All answers given to case
     commentId: [Comment] #All comments given to case
   }
@@ -38,7 +38,7 @@ export const caseType = gql`
     priority: Int
     status: Int
     categoryId: [String!]! #Pass Array of Category Ids
-    senderId: String! #Pass User Id
+    userId: String! #Pass User Id
   }
 `;
 
@@ -46,13 +46,25 @@ export const caseResolvers = {
   Query: {
     getAllCases: async () => {
       return await CaseModel.find().populate(
-        "categoryId senderId answerId commentId"
+        "categoryId userId answerId commentId"
       );
     },
     getSingleCase: async (parentValue: any, args: { caseId: String }) => {
-      return await CaseModel.findById(args.caseId).populate(
-        "categoryId senderId answerId commentId"
-      );
+      return await CaseModel.findById(args.caseId).populate({
+        path:'categoryId userId',
+      }).populate({
+        path:"answerId",
+        populate:{
+          path:"userId",
+          model:"User"
+        }
+      }).populate({
+        path:"commentId",
+        populate:{
+          path:"userId",
+          model:"User"
+        }
+      })
     },
   },
   Mutation: {
@@ -60,7 +72,7 @@ export const caseResolvers = {
       parentValue: any,
       { input }: { input: CaseInterface }
     ) => {
-      const user = await UserModel.findById(input.senderId);
+      const user = await UserModel.findById(input.userId);
       if (!user) {
         throw new Error("User does not exist");
       }
@@ -79,7 +91,7 @@ export const caseResolvers = {
         categoryId: input.categoryId,
         signature: input.signature,
         attachments: input.attachments,
-        senderId: input.senderId,
+        userId: input.userId,
         answerId: [],
         commentId: [],
       });

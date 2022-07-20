@@ -18,7 +18,7 @@ interface CaseInterface {
   priority: Number;
   status: Number;
   categoryId: [String];
-  senderId: String;
+  userId: String;
 }
 
 export { UserInterface, CaseInterface };

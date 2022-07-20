@@ -10,9 +10,8 @@ const commentSchema = new Schema({
   caseId: {
     type: Schema.Types.ObjectId,
     ref: "Case",
-    require: true,
   },
-  senderId: {
+  userId: {
     type: Schema.Types.ObjectId,
     ref: "User",
     require: true,

@@ -88,7 +88,6 @@ export const userResolvers = {
         return user
           .save()
           .then((res: any) => {
-            console.log(res);
             return res;
           })
           .catch((err: any) => {
