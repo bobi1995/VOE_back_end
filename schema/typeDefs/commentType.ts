@@ -6,20 +6,15 @@ const CommentModel = require("../../mongoModels/comment");
 
 export const commentType = gql`
 extend type Mutation {
-    creatComment(
+    createComment(
       caseId: String
       answerId:String
       userId: String!
       description: String
       attachments: [String]
     ): Comment
-
-    editAnswer(
-      answerId: String!
-      description: String
-      attachments: [String]
-    ): Answer
   }
+
   type Comment {
     _id: String
     date: String
@@ -32,4 +27,7 @@ extend type Mutation {
 
 export const commentResolvers = {
   //Only mutations
+  // createComment:async()=>{
+
+  // }
 };

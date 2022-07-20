@@ -11,6 +11,7 @@ import { authResolvers } from "./schema/typeDefs/authType";
 import { categoryResolvers } from "./schema/typeDefs/categoryType";
 import { caseResolvers } from "./schema/typeDefs/caseType";
 import { answerResolvers } from "./schema/typeDefs/answerType";
+import { commentResolvers} from "./schema/typeDefs/commentType";
 
 //typeDefsimport
 import TypeDefs from "./schema/TypeDefs";
@@ -55,6 +56,7 @@ startApolloServer(
     authResolvers,
     categoryResolvers,
     caseResolvers,
-    answerResolvers
+    answerResolvers,
+    commentResolvers
   )
 );

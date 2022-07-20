@@ -2,6 +2,7 @@ const { gql } = require("apollo-server-express");
 const UserModel = require("../../mongoModels/user");
 const AnswerModel = require("../../mongoModels/answer");
 const CaseModel = require("../../mongoModels/case");
+const CommentModel = require('../../mongoModels/comment')
 
 export const answerType = gql`
 
@@ -13,11 +14,14 @@ export const answerType = gql`
       attachments: [String]
     ): Answer
 
+#You can change only description and attachments on comment. CaseId/Comments/UserId not changable 
     editAnswer(
       answerId: String!
-      description: String
+      description: String 
       attachments: [String]
     ): Answer
+
+    deleteAnswer(answerId:String!):Answer
   }
 
 
@@ -26,9 +30,9 @@ export const answerType = gql`
     date: String
     description: String
     attachments: [String]
-    caseId: Case!
-    userId: User!
-    commentId: [Comment]
+    caseId: Case! #For which case Answer is
+    userId: User! #Sender ID
+    commentId: [Comment] #Possible comments on Answer
   }
 `;
 
@@ -80,6 +84,8 @@ export const answerResolvers = {
           throw err;
         });
     },
+
+    //TO_ADD_LATER: 1. Authentication; 2. Only Answer's creator can edit his answer
     editAnswer: async (
       parentValue: any,
       args: { answerId: String; description: String; attachments: [String] }
@@ -105,6 +111,47 @@ export const answerResolvers = {
       } catch (error) {
         throw new Error("Update failed");
       }
+    },
+
+
+    deleteAnswer: async (
+      parentValue: any,
+      args: { answerId: String; description: String; attachments: [String] }
+    ) => {
+      const answer = await AnswerModel.findById(args.answerId);
+      if (!answer) {
+        throw new Error("Answer does not exist");
+      }
+      
+      //Checking if Answer have comments on it
+      if(answer.commentId && answer.commentId.length>0){
+        //If there are comments we loop through all of them
+        answer.commentId.map(async (comment: String) => {
+          // Finding Answer's Comment
+         const answerComment = await CommentModel.findById(comment)
+         if(answerComment){
+          //Finding Comment's owner and extracting the comment from his Records
+          const commentUser = await UserModel.findById(answerComment.userId)
+          if(commentUser){
+            await UserModel.updateOne(
+              { _id: commentUser.userId },
+              { $pull: { commentId: { $in: comment} } }
+            );
+          }  
+         }
+         //Deleting the comment
+        await CommentModel.deleteOne({
+          _id:comment
+         })
+        });
+      }
+
+      // Deleting the answer
+      await AnswerModel.deleteOne({
+        _id: args.answerId,
+      });
+
+      return answer._id;
     },
   },
 };
