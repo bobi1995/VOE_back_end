@@ -38,41 +38,61 @@ export const caseType = gql`
     priority: Int
     status: Int
     categoryId: [String!]! #Pass Array of Category Ids
-    userId: String! #Pass User Id
   }
 `;
 
 export const caseResolvers = {
   Query: {
-    getAllCases: async () => {
+    getAllCases: async (
+      parentValue: any,
+      args: { caseId: String },
+      context: any
+    ) => {
+      if (!context.isAuth) {
+        throw new Error("You must authenticate!");
+      }
       return await CaseModel.find().populate(
         "categoryId userId answerId commentId"
       );
     },
-    getSingleCase: async (parentValue: any, args: { caseId: String }) => {
-      return await CaseModel.findById(args.caseId).populate({
-        path:'categoryId userId',
-      }).populate({
-        path:"answerId",
-        populate:{
-          path:"userId",
-          model:"User"
-        }
-      }).populate({
-        path:"commentId",
-        populate:{
-          path:"userId",
-          model:"User"
-        }
-      })
+    getSingleCase: async (
+      parentValue: any,
+      args: { caseId: String },
+      context: any
+    ) => {
+      if (!context.isAuth) {
+        throw new Error("You must authenticate!");
+      }
+      return await CaseModel.findById(args.caseId)
+        .populate({
+          path: "categoryId userId",
+        })
+        .populate({
+          path: "answerId",
+          populate: {
+            path: "userId",
+            model: "User",
+          },
+        })
+        .populate({
+          path: "commentId",
+          populate: {
+            path: "userId",
+            model: "User",
+          },
+        });
     },
   },
   Mutation: {
     createCase: async (
       parentValue: any,
-      { input }: { input: CaseInterface }
+      { input }: { input: CaseInterface },
+      context: any
     ) => {
-      const user = await UserModel.findById(input.userId);
+      if (!context.isAuth) {
+        throw new Error("You must authenticate!");
+      }
+      const user = await UserModel.findById(context.userId);
       if (!user) {
         throw new Error("User does not exist");
       }
@@ -91,7 +111,7 @@ export const caseResolvers = {
         categoryId: input.categoryId,
         signature: input.signature,
         attachments: input.attachments,
-        userId: input.userId,
+        userId: context.userId, //Assuming if you are logged in, we know your userId. You cannot create case with somebody else's id
         answerId: [],
         commentId: [],
       });

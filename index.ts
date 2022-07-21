@@ -3,7 +3,7 @@ import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
 import express from "express";
 import http from "http";
 import { merge } from "lodash";
-import Auth from "./middlewares/auth";
+const jwt = require("jsonwebtoken");
 
 //resolvers import
 import { userResolvers } from "./schema/typeDefs/userType";
@@ -11,7 +11,7 @@ import { authResolvers } from "./schema/typeDefs/authType";
 import { categoryResolvers } from "./schema/typeDefs/categoryType";
 import { caseResolvers } from "./schema/typeDefs/caseType";
 import { answerResolvers } from "./schema/typeDefs/answerType";
-import { commentResolvers} from "./schema/typeDefs/commentType";
+import { commentResolvers } from "./schema/typeDefs/commentType";
 
 //typeDefsimport
 import TypeDefs from "./schema/TypeDefs";
@@ -25,7 +25,6 @@ async function startApolloServer(typeDefs: any, resolvers: any) {
   const app = express();
   app.use(cors());
   app.use(graphqlUploadExpress());
-  app.use(Auth);
 
   const httpServer = http.createServer(app);
   const server = new ApolloServer({
@@ -34,6 +33,26 @@ async function startApolloServer(typeDefs: any, resolvers: any) {
     csrfPrevention: true,
     cache: "bounded",
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    //authentication
+    context: ({ req }) => {
+      const token =
+        req.headers.authorization && req.headers.authorization.split(" ")[1];
+
+      let decodedToken;
+
+      try {
+        decodedToken = jwt.verify(token, "supersecterkey123!");
+      } catch (err) {
+        return {
+          isAuth: false,
+        };
+      }
+
+      return {
+        userId: decodedToken.userId,
+        isAuth: true,
+      };
+    },
   });
   await server.start();
   server.applyMiddleware({ app });
