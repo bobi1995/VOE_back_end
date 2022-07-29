@@ -1,9 +1,12 @@
-const { gql } = require("apollo-server-express");
-const UserModel = require("../../mongoModels/user");
-const bcrypt = require("bcryptjs");
-const path = require("path");
-const fs = require("fs");
-import { UserInterface } from "../interfaces/allInterfaces";
+declare var require: any;
+declare var __dirname: any;
+
+const { gql } = require('apollo-server-express');
+const UserModel = require('../../mongoModels/user');
+const bcrypt = require('bcryptjs');
+const path = require('path');
+const fs = require('fs');
+import { UserInterface } from '../interfaces/allInterfaces';
 
 export const userType = gql`
   extend type Query {
@@ -53,12 +56,12 @@ export const userResolvers = {
   Query: {
     getAllUsers: async () => {
       return await UserModel.find().populate(
-        "categoryId regCaseIds answerId commentId"
+        'categoryId regCaseIds answerId commentId'
       );
     },
     getSingleUser: async (parentValue: any, args: { id: String }) => {
       return await UserModel.findById(args.id).populate(
-        "categoryId regCaseIds answerId commentId"
+        'categoryId regCaseIds answerId commentId'
       );
     },
   },
@@ -69,7 +72,7 @@ export const userResolvers = {
     ) => {
       const exist = await UserModel.findOne({ username: input.username });
       if (exist) {
-        throw new Error("User already exists");
+        throw new Error('User already exists');
       } else {
         const hashedPassword = await bcrypt.hash(input.password, 12);
 
@@ -101,7 +104,7 @@ export const userResolvers = {
         .file.file;
       const user = await UserModel.findById(args.userId);
       if (!user) {
-        throw new Error("User does not exist");
+        throw new Error('User does not exist');
       }
 
       const stream = createReadStream();
@@ -138,7 +141,7 @@ export const userResolvers = {
     ) => {
       const exist = await UserModel.findById(userId);
       if (!exist) {
-        throw new Error("User does not exists");
+        throw new Error('User does not exists');
       }
       try {
         await UserModel.findOneAndUpdate(
@@ -157,7 +160,7 @@ export const userResolvers = {
         );
         return exist._id;
       } catch (error) {
-        throw new Error("Update failed");
+        throw new Error('Update failed');
       }
     },
 
@@ -167,7 +170,7 @@ export const userResolvers = {
     ) => {
       const user = await UserModel.findById(args.userId);
       if (!user) {
-        throw new Error("User does not exists");
+        throw new Error('User does not exists');
       }
       try {
         const hashedPassword = await bcrypt.hash(args.newPassword, 12);
@@ -184,14 +187,14 @@ export const userResolvers = {
         );
         return user._id;
       } catch (error) {
-        throw new Error("Password update failed");
+        throw new Error('Password update failed');
       }
     },
 
     deleteUser: async (parentValue: any, args: { userId: String }) => {
       const user = await UserModel.findById(args.userId);
       if (!user) {
-        throw new Error("User does not exists");
+        throw new Error('User does not exists');
       }
       const pathName = path.join(__dirname, `../../public/images`);
       const filePath = `${pathName}\\${args.userId}`;

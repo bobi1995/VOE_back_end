@@ -1,8 +1,10 @@
-const { gql } = require("apollo-server-express");
-const UserModel = require("../../mongoModels/user");
-const AnswerModel = require("../../mongoModels/answer");
-const CaseModel = require("../../mongoModels/case");
-const CommentModel = require("../../mongoModels/comment");
+declare var require: any;
+
+const { gql } = require('apollo-server-express');
+const UserModel = require('../../mongoModels/user');
+const AnswerModel = require('../../mongoModels/answer');
+const CaseModel = require('../../mongoModels/case');
+const CommentModel = require('../../mongoModels/comment');
 
 export const answerType = gql`
   extend type Mutation {
@@ -47,15 +49,15 @@ export const answerResolvers = {
       context: any
     ) => {
       if (!context.isAuth) {
-        throw new Error("You must authenticate!");
+        throw new Error('You must authenticate!');
       }
       const user = await UserModel.findById(context.userId);
       if (!user) {
-        throw new Error("User does not exist");
+        throw new Error('User does not exist');
       }
       const existingCase = await CaseModel.findById(args.caseId);
       if (!existingCase) {
-        throw new Error("Case does not exist");
+        throw new Error('Case does not exist');
       }
 
       const newAnswer = new AnswerModel({
@@ -92,16 +94,16 @@ export const answerResolvers = {
       context: any
     ) => {
       if (!context.isAuth) {
-        throw new Error("You must authenticate!");
+        throw new Error('You must authenticate!');
       }
       const answer = await AnswerModel.findById(args.answerId);
       if (!answer) {
-        throw new Error("Answer does not exist");
+        throw new Error('Answer does not exist');
       }
 
       //checking if logged user is owner of the answer
       if (answer.userId !== context.userId) {
-        throw new Error("You are not owner of the answer");
+        throw new Error('You are not owner of the answer');
       }
 
       try {
@@ -118,7 +120,7 @@ export const answerResolvers = {
         );
         return answer._id;
       } catch (error) {
-        throw new Error("Update failed");
+        throw new Error('Update failed');
       }
     },
 
@@ -128,7 +130,7 @@ export const answerResolvers = {
     ) => {
       const answer = await AnswerModel.findById(args.answerId);
       if (!answer) {
-        throw new Error("Answer does not exist");
+        throw new Error('Answer does not exist');
       }
 
       //Checking if Answer have comments on it

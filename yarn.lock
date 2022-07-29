@@ -298,10 +298,10 @@
   "resolved" "https://registry.npmjs.org/@types/mime/-/mime-1.3.2.tgz"
   "version" "1.3.2"
 
-"@types/node@*":
-  "integrity" "sha512-HzNRZtp4eepNitP+BD6k2L6DROIDG4Q0fm4x+dwfsr6LGmROENnok75VGw40628xf+iR24WeMFcHuuBDUAzzsQ=="
-  "resolved" "https://registry.npmjs.org/@types/node/-/node-18.0.3.tgz"
-  "version" "18.0.3"
+"@types/node@*", "@types/node@^18.6.2":
+  "integrity" "sha512-KcfkBq9H4PI6Vpu5B/KoPeuVDAbmi+2mDBqGPGUgoL7yXQtcWGu2vJWmmRkneWK3Rh0nIAX192Aa87AqKHYChQ=="
+  "resolved" "https://registry.npmjs.org/@types/node/-/node-18.6.2.tgz"
+  "version" "18.6.2"
 
 "@types/node@^10.1.0":
   "integrity" "sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw=="
@@ -335,6 +335,11 @@
   "integrity" "sha512-XAahCdThVuCFDQLT7R7Pk/vqeObFNL3YqRyFZg+AqAP/W1/w3xHaIxuW7WszQqTbIBOPRcItYJIou3i/mppu3Q=="
   "resolved" "https://registry.npmjs.org/@types/webidl-conversions/-/webidl-conversions-6.1.1.tgz"
   "version" "6.1.1"
+
+"@types/webpack-env@^1.17.0":
+  "integrity" "sha512-eHSaNYEyxRA5IAG0Ym/yCyf86niZUIF/TpWKofQI/CVfh5HsMEUyfE2kwFxha4ow0s5g0LfISQxpDKjbRDrizw=="
+  "resolved" "https://registry.npmjs.org/@types/webpack-env/-/webpack-env-1.17.0.tgz"
+  "version" "1.17.0"
 
 "@types/whatwg-url@^8.2.1":
   "integrity" "sha512-FtQu10RWgn3D9U4aazdwIE2yzphmTJREDqNdODHrbrZmmMqI0vMheC/6NE/J1Yveaj8H+ela+YwWTjq5PGmuhA=="

@@ -1,8 +1,9 @@
-const { gql } = require("apollo-server-express");
-const UserModel = require("../../mongoModels/user");
-const AnswerModel = require("../../mongoModels/answer");
-const CaseModel = require("../../mongoModels/case");
-const CommentModel = require("../../mongoModels/comment");
+declare var require: any;
+const { gql } = require('apollo-server-express');
+const UserModel = require('../../mongoModels/user');
+const AnswerModel = require('../../mongoModels/answer');
+const CaseModel = require('../../mongoModels/case');
+const CommentModel = require('../../mongoModels/comment');
 
 export const commentType = gql`
   extend type Mutation {
@@ -36,11 +37,11 @@ export const commentResolvers = {
       context: any
     ) => {
       if (!context.isAuth) {
-        throw new Error("You must authenticate!");
+        throw new Error('You must authenticate!');
       }
       const user = await UserModel.findById(context.userId);
       if (!user) {
-        throw new Error("User does not exist");
+        throw new Error('User does not exist');
       }
 
       let newComment: any;
@@ -51,7 +52,7 @@ export const commentResolvers = {
       if (args.caseId) {
         existingCase = await CaseModel.findById(args.caseId);
         if (!existingCase) {
-          throw new Error("Case does not exist");
+          throw new Error('Case does not exist');
         }
         newComment = new CommentModel({
           description: args.description,
@@ -64,7 +65,7 @@ export const commentResolvers = {
       else if (args.answerId) {
         existingAnswer = await AnswerModel.findById(args.answerId);
         if (!existingAnswer) {
-          throw new Error("Answer does not exist");
+          throw new Error('Answer does not exist');
         }
         newComment = new CommentModel({
           description: args.description,

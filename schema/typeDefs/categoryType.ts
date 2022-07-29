@@ -1,6 +1,7 @@
-const { gql } = require("apollo-server-express");
-const CategoryModel = require("../../mongoModels/category");
-const UserModel = require("../../mongoModels/user");
+declare var require: any;
+const { gql } = require('apollo-server-express');
+const CategoryModel = require('../../mongoModels/category');
+const UserModel = require('../../mongoModels/user');
 
 export const categoryType = gql`
   extend type Query {
@@ -29,7 +30,7 @@ export const categoryType = gql`
 export const categoryResolvers = {
   Query: {
     getAllCategories: async () => {
-      return await CategoryModel.find().populate("expertUserIds caseIds");
+      return await CategoryModel.find().populate('expertUserIds caseIds');
     },
   },
   Mutation: {
@@ -39,7 +40,7 @@ export const categoryResolvers = {
     ) => {
       const category = await CategoryModel.findOne({ name: args.name });
       if (category) {
-        throw new Error("Category already exists");
+        throw new Error('Category already exists');
       }
 
       const newCategory = new CategoryModel({
@@ -68,7 +69,7 @@ export const categoryResolvers = {
     ) => {
       const exist = await CategoryModel.findById(categoryId);
       if (!exist) {
-        throw new Error("Category does not exists");
+        throw new Error('Category does not exists');
       }
       try {
         await CategoryModel.findOneAndUpdate(
@@ -84,7 +85,7 @@ export const categoryResolvers = {
         );
         return exist._id;
       } catch (error) {
-        throw new Error("Update failed");
+        throw new Error('Update failed');
       }
     },
 
@@ -95,14 +96,14 @@ export const categoryResolvers = {
     ) => {
       const category = await CategoryModel.findById(args.categoryId);
       if (!category) {
-        throw new Error("Category does not exists");
+        throw new Error('Category does not exists');
       }
       const user = await UserModel.findById(args.userId);
       if (!user) {
-        throw new Error("User does not exists");
+        throw new Error('User does not exists');
       }
       if (category.expertUserIds && category.expertUserIds.includes(user._id)) {
-        throw new Error("Category already added");
+        throw new Error('Category already added');
       }
       category.expertUserIds.push(user);
       await category.save();
@@ -119,11 +120,11 @@ export const categoryResolvers = {
     ) => {
       const category = await CategoryModel.findById(args.categoryId);
       if (!category) {
-        throw new Error("Category does not exists");
+        throw new Error('Category does not exists');
       }
       const user = await UserModel.findById(args.userId);
       if (!user) {
-        throw new Error("User does not exists");
+        throw new Error('User does not exists');
       }
 
       await CategoryModel.updateOne(
@@ -140,7 +141,7 @@ export const categoryResolvers = {
     deleteCategory: async (parentValue: any, args: { categoryId: String }) => {
       const category = await CategoryModel.findById(args.categoryId);
       if (!category) {
-        throw new Error("Category does not exists");
+        throw new Error('Category does not exists');
       }
       if (category.expertUserIds && category.expertUserIds.length > 0) {
         category.expertUserIds.map(async (userId: String) => {

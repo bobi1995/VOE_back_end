@@ -1,7 +1,8 @@
-const { gql } = require("apollo-server-express");
-const UserModel = require("../../mongoModels/user");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+declare var require: any;
+const { gql } = require('apollo-server-express');
+const UserModel = require('../../mongoModels/user');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 export const authType = gql`
   extend type Query {
@@ -22,20 +23,20 @@ export const authResolvers = {
     ) => {
       const user = await UserModel.findOne({ username: args.username });
       if (!user) {
-        throw new Error("User does not exists");
+        throw new Error('User does not exists');
       }
       const isEqual = await bcrypt.compare(args.password, user.password);
       if (!isEqual) {
-        throw new Error("Wrong password");
+        throw new Error('Wrong password');
       }
       const token = jwt.sign(
         {
           userId: user._id,
           username: user.username,
         },
-        "supersecterkey123!",
+        'supersecterkey123!',
         {
-          expiresIn: "1h",
+          expiresIn: '1h',
         }
       );
       return {

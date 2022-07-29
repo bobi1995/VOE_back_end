@@ -1,9 +1,10 @@
-const { gql } = require("apollo-server-express");
-const CaseModel = require("../../mongoModels/case");
-const UserModel = require("../../mongoModels/user");
-const CategoryModel = require("../../mongoModels/category");
+declare var require: any;
+const { gql } = require('apollo-server-express');
+const CaseModel = require('../../mongoModels/case');
+const UserModel = require('../../mongoModels/user');
+const CategoryModel = require('../../mongoModels/category');
 
-import { CaseInterface } from "../interfaces/allInterfaces";
+import { CaseInterface } from '../interfaces/allInterfaces';
 
 export const caseType = gql`
   extend type Query {
@@ -49,10 +50,10 @@ export const caseResolvers = {
       context: any
     ) => {
       if (!context.isAuth) {
-        throw new Error("You must authenticate!");
+        throw new Error('You must authenticate!');
       }
       return await CaseModel.find().populate(
-        "categoryId userId answerId commentId"
+        'categoryId userId answerId commentId'
       );
     },
     getSingleCase: async (
@@ -61,24 +62,24 @@ export const caseResolvers = {
       context: any
     ) => {
       if (!context.isAuth) {
-        throw new Error("You must authenticate!");
+        throw new Error('You must authenticate!');
       }
       return await CaseModel.findById(args.caseId)
         .populate({
-          path: "categoryId userId",
+          path: 'categoryId userId',
         })
         .populate({
-          path: "answerId",
+          path: 'answerId',
           populate: {
-            path: "userId",
-            model: "User",
+            path: 'userId',
+            model: 'User',
           },
         })
         .populate({
-          path: "commentId",
+          path: 'commentId',
           populate: {
-            path: "userId",
-            model: "User",
+            path: 'userId',
+            model: 'User',
           },
         });
     },
@@ -90,17 +91,17 @@ export const caseResolvers = {
       context: any
     ) => {
       if (!context.isAuth) {
-        throw new Error("You must authenticate!");
+        throw new Error('You must authenticate!');
       }
       const user = await UserModel.findById(context.userId);
       if (!user) {
-        throw new Error("User does not exist");
+        throw new Error('User does not exist');
       }
       const category = await CategoryModel.find({
         _id: { $in: input.categoryId },
       });
       if (!category && category.length === 0) {
-        throw new Error("Categories do not exist");
+        throw new Error('Categories do not exist');
       }
 
       const newCase = new CaseModel({

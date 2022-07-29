@@ -1,4 +1,5 @@
-const { gql } = require("apollo-server-express");
+declare var require: any;
+const { gql } = require('apollo-server-express');
 const queryType = gql`
   #Queries
   type Query {
